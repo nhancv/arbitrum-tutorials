@@ -1,8 +1,8 @@
 const hre = require('hardhat')
 const ethers = require('ethers')
-const { Bridge } = require('arb-ts')
-const { hexDataLength } = require('@ethersproject/bytes')
-const { arbLog, requireEnvVariables } = require('arb-shared-dependencies')
+const {ArbSys__factory, Bridge} = require('arb-ts')
+const {hexDataLength} = require('@ethersproject/bytes')
+const {arbLog, requireEnvVariables} = require('arb-shared-dependencies')
 requireEnvVariables(['DEVNET_PRIVKEY', 'L2RPC', 'L1RPC', "INBOX_ADDR"])
 
 /**
@@ -43,6 +43,7 @@ const main = async () => {
   // )
   // await l1Greeter.deployed()
 
+  // https://rinkeby.etherscan.io/address/0x3724782Ce5B2C86677d23f985524f05116b2752b
   const l1Greeter = await L1Greeter.attach('0x3724782Ce5B2C86677d23f985524f05116b2752b');
   console.log(`deployed to ${l1Greeter.address}`)
   const L2Greeter = await (
@@ -56,15 +57,22 @@ const main = async () => {
   // )
   // await l2Greeter.deployed()
 
+  // https://testnet.arbiscan.io/address/0x3c6c47feF64216822CF6eA3431E9C7f51cDabc57
   const l2Greeter = await L2Greeter.attach('0x3c6c47feF64216822CF6eA3431E9C7f51cDabc57');
   console.log(`deployed to ${l2Greeter.address}`)
 
-  const updateL1Tx = await l1Greeter.updateL2Target(l2Greeter.address)
-  await updateL1Tx.wait()
-
-  const updateL2Tx = await l2Greeter.updateL1Target(l1Greeter.address)
-  await updateL2Tx.wait()
-  console.log('Counterpart contract addresses set in both greeters 👍')
+  // const updateL1Tx = await l1Greeter.updateL2Target(l2Greeter.address, {
+  //   gasLimit: 65716,
+  //   gasPrice: ethers.utils.parseUnits('1.00000002', 'gwei')
+  // })
+  // await updateL1Tx.wait()
+  //
+  // const updateL2Tx = await l2Greeter.updateL1Target(l1Greeter.address, {
+  //   gasLimit: 1511287,
+  //   gasPrice: ethers.utils.parseUnits('0.0202', 'gwei')
+  // })
+  // await updateL2Tx.wait()
+  // console.log('Counterpart contract addresses set in both greeters 👍')
 
   /**
    * Let's log the L2 greeting string
@@ -143,6 +151,15 @@ const main = async () => {
     `Sending greeting to L2 with ${callValue.toString()} callValue for L2 fees:`
   )
 
+  const param = {
+    newGreeting: newGreeting,
+    submissionPriceWei: submissionPriceWei.toString(),
+    maxGas: maxGas,
+    gasPriceBid: gasPriceBid.toString(),
+    callValue: callValue.toString()
+  };
+  console.log({param})
+
   const setGreetingTx = await l1Greeter.setGreetingInL2(
     newGreeting, // string memory _greeting,
     submissionPriceWei,
@@ -150,10 +167,14 @@ const main = async () => {
     gasPriceBid,
     {
       value: callValue,
+      gasLimit: 168640,
+      gasPrice: ethers.utils.parseUnits('1.00000002', 'gwei')
     }
   )
   const setGreetingRec = await setGreetingTx.wait()
 
+  // Greeting txn confirmed on L1! 🙌 0x0f9d228ba4ebebcb5ed5cca91a5b576de2dd1eca44ecf3cdb730d4b22c19daae
+  // waiting for L2 tx 🕐... (should take < 10 minutes, current time: 19:38:58 GMT+0700 (Indochina Time)
   console.log(
     `Greeting txn confirmed on L1! 🙌 ${setGreetingRec.transactionHash}`
   )
@@ -182,8 +203,6 @@ const main = async () => {
   )
 
 
-
-
   const retryRec = await l2Provider.waitForTransaction(retryableTxnHash)
 
   console.log(`L2 retryable txn executed 🥳 ${retryRec.transactionHash}`)
@@ -208,3 +227,64 @@ main()
     console.error(error)
     process.exit(1)
   })
+
+// greeter|master⚡ ⇒ yarn run greeter
+// yarn run v1.22.15
+// $ hardhat run scripts/exec.js
+// Environmental variables properly set 👍
+//                             🔵🔵
+//                            🔵  🔵
+//                           🔵    🔵
+//                          🔵      🔵
+//                         🔵        🔵
+//                        🔵          🔵
+//                       🔵            🔵
+//                      🔵              🔵
+//                     🔵                🔵
+//                    🔵                  🔵
+//                   🔵                    🔵
+//                  🔵                      🔵
+//                 🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵
+//                🔵                          🔵
+//               🔵                            🔵
+//              🔵                              🔵
+//             🔵                                🔵
+//            🔵                                  🔵
+//           🔵                                    🔵
+//          🔵                                      🔵
+//         🔵                                        🔵
+//        🔵                                          🔵
+//       🔵                                            🔵
+//      🔵                                              🔵
+//     🔵                                                🔵
+// Arbitrum Demo: Cross-chain Greeter
+// Lets
+// Go ➡️
+// ...🚀
+//
+// Deploying L1 Greeter 👋
+// deployed to 0x3724782Ce5B2C86677d23f985524f05116b2752b
+// Deploying L2 Greeter 👋👋
+// deployed to 0x3c6c47feF64216822CF6eA3431E9C7f51cDabc57
+// Current L2 greeting: "Hello world in L2"
+// Updating greeting from L1 to L2:
+// Current retryable base submission price: 1404531200
+// time in seconds till price update: 50170
+// L2 gas price: 20200000
+// Sending greeting to L2 with 2027022656000 callValue for L2 fees:
+// {
+//   param: {
+//     newGreeting: 'Greeting from far, far away',
+//     submissionPriceWei: '7022656000',
+//     maxGas: 100000,
+//     gasPriceBid: '20200000',
+//     callValue: '2027022656000'
+//   }
+// }
+// Greeting txn confirmed on L1! 🙌 0x0f9d228ba4ebebcb5ed5cca91a5b576de2dd1eca44ecf3cdb730d4b22c19daae
+// waiting for L2 tx 🕐... (should take < 10 minutes, current time: 19:38:58 GMT+0700 (Indochina Time)
+// L2 retryable txn executed 🥳 0xca4a7f6d61a02a218e721f5b372dc4d22d9bd7a2c01d3d4a83140553bab67b3f
+// Updated L2 greeting: "Greeting from far, far away"
+// ✌️
+// ✨  Done in 266.14s.
+// greeter|master⚡ ⇒
