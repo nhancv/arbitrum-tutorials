@@ -13,6 +13,7 @@ const walletPrivateKey = process.env.DEVNET_PRIVKEY
 
 const l1Provider = new ethers.providers.JsonRpcProvider(process.env.L1RPC)
 const l2Provider = new ethers.providers.JsonRpcProvider(process.env.L2RPC)
+
 const signer = new ethers.Wallet(walletPrivateKey)
 
 const l1Signer = signer.connect(l1Provider)
@@ -32,26 +33,30 @@ const main = async () => {
 
   const L1Greeter = await (
     await hre.ethers.getContractFactory('GreeterL1')
-  ).connect(l1Signer) //
+  ).connect(l1Signer)
+
   console.log('Deploying L1 Greeter 👋')
-  const l1Greeter = await L1Greeter.deploy(
-    'Hello world in L1',
-    ethers.constants.AddressZero, // temp l2 addr
-    process.env.INBOX_ADDR
-  )
-  await l1Greeter.deployed()
+  // const l1Greeter = await L1Greeter.deploy(
+  //   'Hello world in L1',
+  //   ethers.constants.AddressZero, // temp l2 addr
+  //   process.env.INBOX_ADDR
+  // )
+  // await l1Greeter.deployed()
+
+  const l1Greeter = await L1Greeter.attach('0x3724782Ce5B2C86677d23f985524f05116b2752b');
   console.log(`deployed to ${l1Greeter.address}`)
   const L2Greeter = await (
     await hre.ethers.getContractFactory('GreeterL2')
   ).connect(l2Signer)
 
   console.log('Deploying L2 Greeter 👋👋')
+  // const l2Greeter = await L2Greeter.deploy(
+  //   'Hello world in L2',
+  //   ethers.constants.AddressZero // temp l1 addr
+  // )
+  // await l2Greeter.deployed()
 
-  const l2Greeter = await L2Greeter.deploy(
-    'Hello world in L2',
-    ethers.constants.AddressZero // temp l1 addr
-  )
-  await l2Greeter.deployed()
+  const l2Greeter = await L2Greeter.attach('0x3c6c47feF64216822CF6eA3431E9C7f51cDabc57');
   console.log(`deployed to ${l2Greeter.address}`)
 
   const updateL1Tx = await l1Greeter.updateL2Target(l2Greeter.address)
