@@ -12,8 +12,14 @@ See [./exec.js](./scripts/exec.js) for inline explanation.
 
 ### Run Demo:
 
+- Send a message from `L1` to `L2`
 ```
-yarn run greeter
+yarn run greeterFromL1
+```
+
+- Send a message from `L2` to `L1`. After get `L2` hash, use `outbox-execute` to complete the rest of flow on `L1`
+```
+yarn run greeterFromL2
 ```
 
 ## Config Environment Variables
