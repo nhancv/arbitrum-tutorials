@@ -17,7 +17,11 @@ See [./exec.js](./scripts/exec.js) for inline explanation.
 yarn run greeterFromL1
 ```
 
-- Send a message from `L2` to `L1`. After get `L2` hash, use `outbox-execute` to complete the rest of flow on `L1`
+- Send a message from `L2` to `L1`. 
+
+> With non-native token (ETH), we don't need to execute outbox manually,
+> The system is auto redeem for us. Wait more than a day and check L1 Greeter
+
 ```
 yarn run greeterFromL2
 ```

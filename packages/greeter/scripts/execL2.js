@@ -135,6 +135,7 @@ main()
 // greeter|master⚡ ⇒
 
 // =========================
-// Wait around 1 days
-// Verify with outbox-execute
+// With non-native token (ETH), we don't need to execute outbox manually,
+// The system is auto redeem for us. Wait more than a day and check L1 Greeter
+// Verify with outbox-execute -> Expect you get an revert error: UNPREDICTABLE_GAS_LIMIT and ALREADY_SPENT
 // node_modules/.bin/hardhat outbox-exec --txhash 0xaea123e8aa36c128ecf2b42ea559ba7cd51845806f41a03c86bcd2e1e75f3391
