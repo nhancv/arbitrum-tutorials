@@ -19,8 +19,18 @@ yarn run greeterFromL1
 
 - Send a message from `L2` to `L1`. 
 
-> With non-native token (ETH), we don't need to execute outbox manually,
-> The system is auto redeem for us. Wait more than a day and check L1 Greeter
+    - Wait more than a day.
+    - Get L2 unique withdraw id: 
+      - Open scan info of L2 tx -> Event logs: https://testnet.arbiscan.io/tx/0xaea123e8aa36c128ecf2b42ea559ba7cd51845806f41a03c86bcd2e1e75f3391#eventlog
+      - Get event L2ToL1Transaction of ArbOS (Topic = 0x5baaa87db386365b5c161be377bc3d8e317e8d98d71a3ca7ed7d555340c8f767) is fine: 0x8a29 = 35369
+      - Read value of index 2
+      - Check status of unique id here: https://testnet.arbiscan.io/txsExit
+    - Get L1 BatchNumber:
+      - Read L2 tx event logs => Check Event L2ToL1Transaction of ArbOS => Read value of index 3 => 0x68f = 1679
+      - Find L1 Outbox address https://developer.offchainlabs.com/docs/useful_addresses
+      - Read L1 Outbox: https://rinkeby.etherscan.io/address/0x2360A33905dc1c72b12d975d975F42BaBdcef9F3#readProxyContract
+      - Fill batch number to outboxEntryExists => If it returns true, mean you can execute output to finish the process
+    - Execute outbox to complete process on `L1` -> Using `./outbox-execute`
 
 ```
 yarn run greeterFromL2

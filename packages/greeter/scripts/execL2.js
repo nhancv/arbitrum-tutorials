@@ -135,7 +135,21 @@ main()
 // greeter|master⚡ ⇒
 
 // =========================
-// With non-native token (ETH), we don't need to execute outbox manually,
-// The system is auto redeem for us. Wait more than a day and check L1 Greeter
-// Verify with outbox-execute -> Expect you get an revert error: UNPREDICTABLE_GAS_LIMIT and ALREADY_SPENT
+// Verify with outbox-execute
 // node_modules/.bin/hardhat outbox-exec --txhash 0xaea123e8aa36c128ecf2b42ea559ba7cd51845806f41a03c86bcd2e1e75f3391
+// outbox-execute|master⚡ ⇒ node_modules/.bin/hardhat outbox-exec --txhash 0xaea123e8aa36c128ecf2b42ea559ba7cd51845806f41a03c86bcd2e1e75f3391
+// Environmental variables properly set 👍
+// Arbitrum Demo: Outbox Execution
+// Lets
+// Go ➡️
+// ...🚀
+//
+// Attempting to query from 0 to block latest
+// Waiting for message to be confirmed: Batchnumber: 1679, IndexInBatch 0
+// Transaction confirmed! Trying to execute now
+// going to get proof
+// got proof
+// Found outbox entry!
+// Transaction hash: 0xe2738f90c4258be99616511256305c9a1f834f0883da97daed302e5c014c8ce2
+// Done! Your transaction is executed
+// outbox-execute|master⚡ ⇒

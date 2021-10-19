@@ -82,7 +82,7 @@ module.exports = async txnHash => {
   )
 
   while (!outgoingMessageState === OutgoingMessageState.CONFIRMED) {
-    await wait(1000 * 60)
+    await wait(1000 * 60 * 2)
     const outgoingMessageState = await bridge.getOutGoingMessageState(
       batchNumber,
       indexInBatch
