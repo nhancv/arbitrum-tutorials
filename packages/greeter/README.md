@@ -30,6 +30,7 @@ yarn run greeterFromL1
       - Find L1 Outbox address https://developer.offchainlabs.com/docs/useful_addresses
       - Read L1 Outbox: https://rinkeby.etherscan.io/address/0x2360A33905dc1c72b12d975d975F42BaBdcef9F3#readProxyContract
       - Fill batch number to outboxEntryExists => If it returns true, mean you can execute output to finish the process
+    - Read more: https://developer.offchainlabs.com/docs/l1_l2_messages#l2-to-l1-messages-lifecycle
     - Execute outbox to complete process on `L1` -> Using `./outbox-execute`
 
 ```
