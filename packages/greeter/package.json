@@ -6,6 +6,7 @@
     "build": "hardhat compile",
     "greeterFromL1": "hardhat run scripts/execL1.js",
     "greeterFromL2": "hardhat run scripts/execL2.js"
+    "greeter": "hardhat run scripts/exec.js"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
